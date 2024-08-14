@@ -82,7 +82,7 @@ persistence:
   # If undefined (the default) or set to null, no `storageClassName` spec is
   # set, choosing the default provisioner.  (gp2 on AWS, standard on
   # GKE, AWS & OpenStack).
-  storageClass: null
+  storageClass: 
 
   # -- Used for hostPath persistence if PVC is disabled.
   # If both PVC and hostPath persistence are disabled, "emptyDir" will be used.
