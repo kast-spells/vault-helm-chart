@@ -28,8 +28,13 @@ spec:
       accessModes:
         - ReadWriteOnce
       resources:
-        requests:
-          storage: {{ .Values.persisence.size }}          
+        requests:         
+          storage: {{ .Values.persisence.size }}
+      {{- if (eq "-" .Values.persistence.storageClass) }}
+      storageClassName: ""
+      {{- else }}
+      storageClassName: "{{ .Values.persistence.storageClass }}"
+      {{- end }}
   {{- end }}        
   template:
     metadata:
