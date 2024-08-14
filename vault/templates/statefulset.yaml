@@ -29,7 +29,7 @@ spec:
         - ReadWriteOnce
       resources:
         requests:         
-          storage: {{ .Values.persisence.size }}
+          storage: {{ .Values.persistence.size }}
       {{- if (eq "-" .Values.persistence.storageClass) }}
       storageClassName: ""
       {{- else }}
@@ -312,11 +312,9 @@ spec:
           emptyDir: {}
         - name: vault-root
           emptyDir: {}
-        {{- if .Values.persistence.disabled }}
+
+        {{- if eq .Values.persistence.enabled "false" }}
         - name: vault-file
-          persistentVolumeClaim:
-            claimName: {{ template "vault.fullname" . }}-pvc
-        {{- else }}
           {{- if .Values.persistence.hostPath }}
           hostPath:
             path: {{ .Values.persistence.hostPath }}
