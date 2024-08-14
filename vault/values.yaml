@@ -90,7 +90,7 @@ persistence:
   hostPath: ""
 
   # -- Set default PVC size
-  size: 10G
+  size: 1G
 
   # -- Set default PVC access mode.
   # Check: https://kubernetes.io/docs/concepts/storage/persistent-volumes/#access-modes
