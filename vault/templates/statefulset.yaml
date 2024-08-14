@@ -23,13 +23,13 @@ spec:
   {{- if .Values.persistence.enabled }}    
   volumeClaimTemplates:
   - metadata:
-      name: {{ template "vault.fullname" . }}
+      name: vault-file
     spec:
       accessModes:
         - ReadWriteOnce
       resources:
         requests:
-          storage: 1Gi
+          storage: {{ .Values.persisence.size }}          
   {{- end }}        
   template:
     metadata:
@@ -307,8 +307,8 @@ spec:
           emptyDir: {}
         - name: vault-root
           emptyDir: {}
-        - name: vault-file
         {{- if .Values.persistence.disabled }}
+        - name: vault-file
           persistentVolumeClaim:
             claimName: {{ template "vault.fullname" . }}-pvc
         {{- else }}
