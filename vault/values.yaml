@@ -74,7 +74,7 @@ ingress:
 persistence:
   # -- Enable persistence using Persistent Volume Claims.
   # Check: http://kubernetes.io/docs/user-guide/persistent-volumes/
-  enabled: false
+  enabled: true
 
   # -- Set Vault data Persistent Volume Storage Class.
   # If defined, sets the actual `storageClassName: <storageClass>`.

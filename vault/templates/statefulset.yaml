@@ -20,6 +20,17 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "vault.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if .Values.persistence.enabled }}    
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ template "vault.fullname" . }}
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
+  {{- end }}        
   template:
     metadata:
       labels:
