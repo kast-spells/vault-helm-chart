@@ -308,7 +308,7 @@ spec:
         - name: vault-root
           emptyDir: {}
         - name: vault-file
-        {{- if .Values.persistence.enabled }}
+        {{- if .Values.persistence.disabled }}
           persistentVolumeClaim:
             claimName: {{ template "vault.fullname" . }}-pvc
         {{- else }}
