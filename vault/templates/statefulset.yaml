@@ -33,17 +33,17 @@ spec:
 {{- with .Values.podAnnotations }}
 {{ toYaml . | indent 8 }}
 {{- end }}
-{{- if .Values.persistence.enabled }}    
+{{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
         name: vault-file
       spec:
+        storageClassName: "{{ default "" .Values.persistence.storageClass }}"
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:         
             storage: {{ .Values.persistence.size }}
-        storageClassName: "{{ default "" .Values.persistence.storageClass }}"
-{{- end }}   
+{{- end }}
     spec:
       initContainers:
       - name: vault-config
