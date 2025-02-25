@@ -25,7 +25,7 @@ spec:
     - metadata:
         name: vault-file
       spec:
-{{-if .Values.persistence.storageClass }}
+{{- if .Values.persistence.storageClass }}
         storageClassName: "{{ default "" .Values.persistence.storageClass }}"
 {{- end }}
         accessModes: ["ReadWriteOnce"]
