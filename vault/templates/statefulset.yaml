@@ -175,7 +175,7 @@ spec:
       - name: vault-unsealer
         image: "{{ .Values.unsealer.image.repository }}:{{ include "vault.bank-vaults.version" . }}"
         imagePullPolicy: {{ .Values.unsealer.image.pullPolicy }}
-        command: ["bank-vaults", "unseal", "--init"]
+        command: ["bank-vaults", "unseal"]
         args: {{ toJson .Values.unsealer.args }}
         env:
         - name: VAULT_CACERT
