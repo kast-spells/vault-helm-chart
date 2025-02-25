@@ -23,10 +23,10 @@ spec:
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
-        name: vault-raft
+        name: vault-file
       spec:
 {{- if .Values.persistence.storageClass }}
-        storageClassName: "{{ default "" .Values.persistence.storageClass }}"
+        storageClassName: "{{ .Values.persistence.storageClass }}"
 {{- end }}
         accessModes: ["ReadWriteOnce"]
         resources:
