@@ -23,11 +23,6 @@ spec:
   {{- if .Values.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
-        labels:
-          helm.sh/chart: {{ template "vault.chart" . }}
-          app.kubernetes.io/name: {{ template "vault.name" . }}
-          app.kubernetes.io/instance: {{ .Release.Name }}
-          app.kubernetes.io/managed-by: {{ .Release.Service }}
         name: vault-raft
       spec:
 {{- if .Values.persistence.storageClass }}
