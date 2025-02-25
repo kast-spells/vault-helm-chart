@@ -33,6 +33,18 @@ spec:
 {{- with .Values.podAnnotations }}
 {{ toYaml . | indent 8 }}
 {{- end }}
+  {{- if .Values.persistence.enabled }}    
+  volumeClaimTemplates:
+  - metadata:
+      name: vault-file
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:         
+          storage: {{ .Values.persistence.size }}
+      storageClassName: "{{ default "" .Values.persistence.storageClass }}"
+  {{- end }}   
     spec:
       initContainers:
       - name: vault-config
@@ -296,17 +308,9 @@ spec:
           emptyDir: {}
         - name: vault-root
           emptyDir: {}
+        {{- if not .Values.persistence.enabled }}
         - name: vault-file
-        {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ template "vault.fullname" . }}-pvc
-        {{- else }}
-          {{- if .Values.persistence.hostPath }}
-          hostPath:
-            path: {{ .Values.persistence.hostPath }}
-          {{- else }}
           emptyDir: {}
-          {{- end }}
         {{- end }}
         {{- range .Values.vault.customSecrets }}
         - name: {{ .secretName }}
