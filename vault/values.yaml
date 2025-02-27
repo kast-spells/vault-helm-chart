@@ -278,7 +278,7 @@ unsealer:
       "--mode",
       "k8s",
       "--k8s-secret-namespace",
-      "default",
+      "vault",
       "--k8s-secret-name",
       "bank-vaults",
     ]
