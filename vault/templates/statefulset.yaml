@@ -175,8 +175,9 @@ spec:
       - name: vault-unsealer
         image: "{{ .Values.unsealer.image.repository }}:{{ include "vault.bank-vaults.version" . }}"
         imagePullPolicy: {{ .Values.unsealer.image.pullPolicy }}
-        command: ["bank-vaults", "unseal"]
-        args: {{ toJson .Values.unsealer.args }}
+        command: ["sleep infinite"]
+        # command: ["bank-vaults", "unseal"]
+        # args: {{ toJson .Values.unsealer.args }}
         env:
         - name: VAULT_CACERT
           value: /vault/tls/ca.crt
