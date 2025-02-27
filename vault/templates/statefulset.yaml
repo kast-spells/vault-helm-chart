@@ -20,6 +20,18 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "vault.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if .Values.persistence.enabled }}    
+  volumeClaimTemplates:
+  - metadata:
+      name: vault-file
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:         
+          storage: {{ .Values.persistence.size }}
+      storageClassName: "{{ default "" .Values.persistence.storageClass }}"
+  {{- end }}   
   template:
     metadata:
       labels:
@@ -33,18 +45,6 @@ spec:
 {{- with .Values.podAnnotations }}
 {{ toYaml . | indent 8 }}
 {{- end }}
-  {{- if .Values.persistence.enabled }}    
-  volumeClaimTemplates:
-  - metadata:
-      name: vault-file
-    spec:
-      accessModes:
-        - ReadWriteOnce
-      resources:
-        requests:         
-          storage: {{ .Values.persistence.size }}
-      storageClassName: "{{ default "" .Values.persistence.storageClass }}"
-  {{- end }}   
     spec:
       initContainers:
       - name: vault-config
