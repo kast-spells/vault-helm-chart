@@ -20,19 +20,6 @@ spec:
     matchLabels:
       app.kubernetes.io/name: {{ template "vault.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
-  {{- if .Values.persistence.enabled }}
-  volumeClaimTemplates:
-    - metadata:
-        name: vault-file
-      spec:
-{{- if .Values.persistence.storageClass }}
-        storageClassName: "{{ .Values.persistence.storageClass }}"
-{{- end }}
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:         
-            storage: {{ .Values.persistence.size }}
-  {{- end }}
   template:
     metadata:
       labels:
@@ -46,6 +33,18 @@ spec:
 {{- with .Values.podAnnotations }}
 {{ toYaml . | indent 8 }}
 {{- end }}
+  {{- if .Values.persistence.enabled }}    
+  volumeClaimTemplates:
+  - metadata:
+      name: vault-file
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:         
+          storage: {{ .Values.persistence.size }}
+      storageClassName: "{{ default "" .Values.persistence.storageClass }}"
+  {{- end }}   
     spec:
       initContainers:
       - name: vault-config
@@ -175,9 +174,7 @@ spec:
       - name: vault-unsealer
         image: "{{ .Values.unsealer.image.repository }}:{{ include "vault.bank-vaults.version" . }}"
         imagePullPolicy: {{ .Values.unsealer.image.pullPolicy }}
-        command: ["/bin/sh", "-c"]
-        args: ["echo 'Overriding entrypoint'; sleep infinite"]
-        # command: ["bank-vaults", "unseal"]
+        # command: ["bank-vaults", "unseal", "--init"]
         # args: {{ toJson .Values.unsealer.args }}
         env:
         - name: VAULT_CACERT
@@ -219,7 +216,7 @@ spec:
         image: "{{ .Values.unsealer.image.repository }}:{{ include "vault.bank-vaults.version" . }}"
         imagePullPolicy: {{ .Values.unsealer.image.pullPolicy }}
         command: ["bank-vaults", "configure"]
-        args: {{ toJson (append .Values.configurer.args "--disable-metrics") }}
+        args: {{ toJson (append .Values.unsealer.args "--disable-metrics") }}
         env:
         - name: VAULT_CACERT
           value: /vault/tls/ca.crt
@@ -311,17 +308,9 @@ spec:
           emptyDir: {}
         - name: vault-root
           emptyDir: {}
+        {{- if not .Values.persistence.enabled }}
         - name: vault-file
-        {{- if .Values.persistence.enabled }}
-          persistentVolumeClaim:
-            claimName: {{ template "vault.fullname" . }}-pvc
-        {{- else }}
-          {{- if .Values.persistence.hostPath }}
-          hostPath:
-            path: {{ .Values.persistence.hostPath }}
-          {{- else }}
           emptyDir: {}
-          {{- end }}
         {{- end }}
         {{- range .Values.vault.customSecrets }}
         - name: {{ .secretName }}
