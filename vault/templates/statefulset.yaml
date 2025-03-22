@@ -175,10 +175,10 @@ spec:
       - name: vault-unsealer
         image: "{{ .Values.unsealer.image.repository }}:{{ include "vault.bank-vaults.version" . }}"
         imagePullPolicy: {{ .Values.unsealer.image.pullPolicy }}
-        command: ["/bin/sh", "-c"]
-        args: ["echo 'Overriding entrypoint'; sleep infinite"]
-        # command: ["bank-vaults", "unseal", "--init"]
-        # args: {{ toJson .Values.unsealer.args }}
+        # command: ["/bin/sh", "-c"]
+        # args: ["echo 'Overriding entrypoint'; sleep infinite"]
+        command: ["bank-vaults", "unseal", "--init"]
+        args: {{ toJson .Values.unsealer.args }}
         env:
         - name: VAULT_CACERT
           value: /vault/tls/ca.crt
